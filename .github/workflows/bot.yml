@@ -2,7 +2,7 @@ name: Krishu-MD Bot
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/30 * * * *"   # restart every 30 min
+    - cron: "*/30 * * * *"
 
 jobs:
   run-bot:
