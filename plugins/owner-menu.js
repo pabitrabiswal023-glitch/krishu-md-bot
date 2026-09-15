@@ -1,47 +1,46 @@
-const config = require("../config");
-
-module.exports = async ({ sock, m, jid, sender, body, reply }) => {
+module.exports = async ({ body, reply, isOwner, config, sock, jid }) => {
   const p = config.PREFIX;
   const cmd = body.trim().split(/\s+/)[0].toLowerCase();
 
   if (cmd === `${p}menu` || cmd === `${p}help`) {
     return reply(
 `╭─「 ${config.BOT_NAME} 」
-│ 🤖 .menu — this menu
-│ 📌 .ping — bot speed
-│ 👤 .owner — owner info
+│ 🤖 .menu — ye menu
+│ 📌 .ping — speed test
+│ ⏱ .runtime — uptime
+│ 👑 .owner — owner info
 │ 📥 .sticker — image→sticker
-│ 📷 .photo — sticker→photo
 │ 🔊 .tts <text> — text to speech
-│ 📋 .paste <text> — make pastebin
-│ ⚙️ .runtime — uptime
-│ 👥 .promote/.demote @user (admin)
-│ 🚪 .kick @user (admin)
-│ 🔗 .welcome on/off (group)
-│ 🧹 .clear — clear temp (owner)
-│ 📴 .shutdown — stop bot (owner)
-╰─────────────`
-    );
+│ 🌤 .weather <city> — mausam
+│ 😄 .joke — random joke
+│ 💬 .quote — random quote
+│ 📊 .info — bot info
+│ 👥 .promote/.demote @user
+│ 🚪 .kick @user
+│ 🔇 .mute / .unmute (group)
+│ 📴 .shutdown — bot band (owner)
+╰─────────────`);
   }
 
   if (cmd === `${p}ping`) {
     const t = Date.now();
-    await reply("📶 Speed test...");
+    await reply("📶 Testing...");
     return reply(`🏓 Pong! ${Date.now() - t} ms`);
   }
 
-  if (cmd === `${p}owner`) {
-    return reply(`👑 Owner: wa.me/${config.OWNER_NUMBER}`);
-  }
+  if (cmd === `${p}owner`)
+    return reply(`👑 Owner: ${config.OWNER_NAME}\n📱 wa.me/${config.OWNER_NUMBER}`);
 
   if (cmd === `${p}runtime`) {
-    const up = process.uptime();
-    const h = Math.floor(up / 3600), mn = Math.floor(up % 3600 / 60), s = Math.floor(up % 60);
-    return reply(`⏱ Runtime: ${h}h ${mn}m ${s}s`);
+    const up = (Date.now() - global.botStartTime) / 1000;
+    return reply(`⏱ Uptime: ${Math.floor(up/3600)}h ${Math.floor(up%3600/60)}m ${Math.floor(up%60)}s`);
   }
 
-  if (cmd === `${p}shutdown` && sender.includes(config.OWNER_NUMBER)) {
-    await reply("🛑 Shutting down...");
+  if (cmd === `${p}info`)
+    return reply(`🤖 ${config.BOT_NAME} v1.0\n📡 Baileys MD\n🌏 Works: All Countries\n⭐ Repo: github.com/pabitrabiswal023-glitch/krishu-md-bot`);
+
+  if (cmd === `${p}shutdown` && isOwner) {
+    await reply("🛑 Bot shutting down...");
     process.exit(0);
   }
 };
